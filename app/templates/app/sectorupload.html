@@ -1,0 +1,172 @@
+<!-- sectorupload.html -->
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+  
+
+  input[type="file"],
+  button[type="submit"] {
+    background-color: indianred;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  input[type="file"]:hover,
+  button[type="submit"]:hover {
+    background-color: green;
+  }
+
+  /* Custom CSS */
+  .modal-dialog-centered {
+    transform: translateX(26%) !important;
+    max-width:550px !important;
+  }
+
+
+  
+  th {
+  
+    font-weight:bold !important;
+    background-color: indianred !important;
+    color: white !important;
+      text-align: left !important;
+    padding: 8px !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+td {
+    
+    font-weight:bold !important;
+    color: black !important;
+    text-align: left !important;
+    padding: 8px !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+
+
+</style>
+
+<div class="text-center">
+  <h3 style="font-weight:bold">Sector Limit Upload</h3>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="excel_file">
+    <button id="uploadButton" type="submit">Upload</button>
+  </form>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Success &nbsp; <img src="{% static 'assets/img/success.png' %}" alt="Success Icon" height="20px"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>{{ success_message }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Failure Modal -->
+<div id="failureModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Failure &nbsp; <img src="{% static 'assets/img/failure.png' %}" alt="Failure Icon" height="20px"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>{{ failure_message }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Warning Modal -->
+<div id="warningModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Warning &nbsp; <img src="{% static 'assets/img/warning.png' %}" alt="Warning Icon" height="20px"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>{{ warning_message }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Display uploaded records -->
+{% if records %}
+<div class="container mt-5">
+  <h4>Uploaded Records: {{ records|length }} records</h4>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>CUST_ID</th>
+        <th>LOCATION</th>
+        <th>SECTOR_DESC</th>
+        <th>SECTOR_CODE</th>
+        <th>OBLIGOR_RISK_RATING</th>
+        <th>IFRS_CLASSIFICATION</th>
+        <th>SBU_DIVISION</th>
+        <th>CBK_GRADE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      <tr>
+        <td>{{ record.CUST_ID }}</td>
+        <td>{{ record.LOCATION }}</td>
+        <td>{{ record.SECTOR_DESC }}</td>
+        <td>{{ record.SECTOR_CODE }}</td>
+        <td>{{ record.OBLIGOR_RISK_RATING }}</td>
+        <td>{{ record.IFRS_CLASSIFICATION }}</td>
+        <td>{{ record.SBU_DIVISION }}</td>
+        <td>{{ record.CBK_GRADE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<!-- JavaScript code -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Show success modal if 'success_message' is present
+    {% if success_message %}
+    $('#successModal').modal('show');
+    {% endif %}
+
+    // Show failure modal if 'failure_message' is present
+    {% if failure_message %}
+    $('#failureModal').modal('show');
+    {% endif %}
+
+    // Show warning modal if 'warning_message' is present
+    {% if warning_message %}
+    $('#warningModal').modal('show');
+    {% endif %}
+  });
+</script>
+{% endblock %}

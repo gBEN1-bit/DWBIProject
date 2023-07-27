@@ -1,0 +1,164 @@
+<!-- excelupload.html -->
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+  input[type="file"],
+  button[type="submit"] {
+    background-color: indianred;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  input[type="file"]:hover,
+  button[type="submit"]:hover {
+    background-color: green;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th {
+  
+    font-weight:bold !important;
+    background-color: indianred !important;
+    color: white !important;
+      text-align: left !important;
+    padding: 8px !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+td {
+    
+    font-weight:bold !important;
+    color: black !important;
+    text-align: left !important;
+    padding: 8px !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+    .modal-dialog-centered {
+    transform: translateX(26%) !important;
+  }
+  
+ 
+</style>
+
+<div class="text-center">
+  <h3 style="font-weight:bold">Limit Definition Upload</h3>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="excel_file">
+    <button id="uploadButton" type="submit">Upload</button>
+  </form>
+</div>
+
+{% if success_message %}
+  <!-- Success Modal -->
+  <div id="successModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center">Success &nbsp; <img src="{% static 'assets/img/success.png' %}" alt="Success Icon" height="20px"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>{{ success_message }}</p>
+          <!--<p><a href="#uploadedRecords">Click to see records</a></p>-->
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if failure_message %}
+  <!-- Failure Modal -->
+  <div id="failureModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center">Failure &nbsp; <img src="{% static 'assets/img/failure.png' %}" alt="Failure Icon" height="20px"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>{{ failure_message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if warning_message %}
+  <!-- Warning Modal -->
+  <div id="warningModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center">Warning &nbsp; <img src="{% static 'assets/img/warning.png' %}" alt="Warning Icon" height="20px"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>{{ warning_message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if uploaded_records %}
+  <h4 id="uploadedRecords">Uploaded Records: {{ uploaded_records|length }} records</h4>
+  <table>
+    <thead>
+      <tr>
+        {% for column_name in uploaded_records.0.keys %}
+          <th>{{ column_name }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in uploaded_records %}
+        <tr>
+          {% for value in record.values %}
+            <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+<!-- JavaScript code -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Show success modal if 'success_message' is present
+    {% if success_message %}
+    $('#successModal').modal('show');
+    {% endif %}
+
+    // Show failure modal if 'failure_message' is present
+    {% if failure_message %}
+    $('#failureModal').modal('show');
+    {% endif %}
+
+    // Show warning modal if 'warning_message' is present
+    {% if warning_message %}
+    $('#warningModal').modal('show');
+    {% endif %}
+  });
+</script>
+{% endblock %}

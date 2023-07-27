@@ -1,0 +1,121 @@
+{% load static %}
+
+
+
+
+
+<div class="sidebar" data-color="purple" data-background-color="white"  data-image="/static/assets/img/sidebar-1.jpg">
+  <div class="logo">
+    <a target="_blank" rel="noopener noreferrer" href="https://fintraksoftware.com/about.html" class="simple-text logo-normal">
+      <img src="{% static 'assets/img/logo.png' %}" alt="DWBI Interface" width="200">
+    </a>
+  </div>
+  <div class="sidebar-wrapper">
+    <ul class="nav">
+      {% if request.user.is_authenticated %}
+      <li class="nav-item {% if 'reports' in request.path or 'index' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'index' %}">
+          <i class="material-icons">dashboard</i>
+          <p>Dashboard</p>
+        </a>
+      </li>
+
+
+{#{% if request.user.is_authenticated and request.user.is_staff %}#}
+        {% if request.user.is_authenticated and request.user.is_superuser %}
+     <li class="nav-item">
+  <a class="nav-link" href="#" role="button" data-toggle="collapse" data-target="#excelDropdown" aria-expanded="{% if 'excelupload' in request.path or 'excelupload' in request.path %}true{% else %}false{% endif %}" aria-controls="excelDropdown">
+    <div style="display: flex; align-items: center;">
+      <i class="material-icons">library_books</i>
+      <p class="dropdown-toggle">Excel Upload</p>
+    </div>
+  </a>
+<div class="collapse {% if 'excelupload' in request.path  or 'sectorupload' in request.path %}show{% endif %} " id="excelDropdown">
+
+    <ul class="nav flex-column">
+      <li class="nav-item {% if 'excelupload' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'excelupload' %}">Limit Definition Upload</a>
+      </li>
+      <li class="nav-item {% if 'sectorupload' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'sectorupload' %}">Sector Limits Upload</a>
+      </li>
+    </ul>
+    </div>
+      <li class="nav-item {% if 'page-user' in request.path %}active{% endif %}">
+        <a class="nav-link" href="/admin/">
+          <i class="material-icons">person</i>
+          <p>Admin Portal</p>
+        </a>
+      </li>
+
+{% endif %}
+
+     <li class="nav-item">
+  <a class="nav-link" href="#" role="button" data-toggle="collapse" data-target="#reportsDropdown" aria-expanded="{% if 'allreport' in request.path or 'crm' in request.path %}true{% else %}false{% endif %}" aria-controls="reportsDropdown">
+    <div style="display: flex; align-items: center;">
+      <i class="material-icons">content_paste</i>
+      <p class="dropdown-toggle">Reports</p>
+    </div>
+  </a>
+<div class="collapse {% if 'allreport' in request.path  or 'crm' in request.path %}show{% endif %} " id="reportsDropdown">
+
+    <ul class="nav flex-column">
+      <li class="nav-item {% if 'allreport' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'allreport' %}">E-Channels</a>
+      </li>
+      <li class="nav-item {% if 'crm' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'crm' %}">Credit Monitoring</a>
+      </li>
+    </ul>
+  </div>
+</li>
+
+
+
+      <li class="nav-item {% if 'contact' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'contact' %}">
+          <i class="material-icons">language</i>
+          <p>Request Demo</p>
+        </a>
+      </li>
+      <li class="nav-item {% if 'home' in request.path %}active{% endif %}">
+        <a class="nav-link" href="{% url 'logout' %}"> 
+          <i class="material-icons">directions_run</i>
+          <p>Logout</p>
+        </a>
+      </li>
+      {% else %}
+      <!--- 
+        <li class="nav-item">
+          <a class="nav-link" 
+             target="_blank" rel="noopener noreferrer"  
+             href="https://appseed.us/admin-dashboards/django-dashboard-material-pro">
+            <i class="material-icons">unarchive</i>
+            <p>PRO Version</p>
+          </a>
+        </li>          
+        --->
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.sidebar .nav-item').on('click', function() {
+      $('.sidebar .nav-item').removeClass('active');
+      $(this).addClass('active');
+    });
+
+    // Set Dashboard as active initially
+      $('.sidebar .nav-item:first-child').addClass('active');
+
+
+  });
+</script>
+
+<style>
+  .sidebar .nav-item.active {
+    background-color: indianred;
+  }
+</style>
